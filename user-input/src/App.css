@@ -1,0 +1,22 @@
+.App{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.login-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.login-form button{
+  width: 50%;
+}
+.login-field{
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+}
