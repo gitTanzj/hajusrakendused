@@ -1,20 +1,49 @@
 import React from 'react'
 import { useState } from 'react';
-
+import axios from 'axios'
 
 export const LoginForm = () => {
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        
+        if (username === '' || password === '' || email === '') {
+            console.log('Please enter all fields')
+            return
+        } else {
+          const response = await axios.post('http://localhost:4000/account/register',
+         {
+            email: email,
+            username: username,
+            password: password
+        }, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            console.log(response)
+            setUsername('')
+            setPassword('')
+            setEmail('')
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        return response
+        }
     }
 
   return (
     <div>
         <form className='login-form' onSubmit={(event) => handleSubmit(event)}>
+            <div className='login-field'>
+                <label>Email</label>
+                <input value={email} onChange={(e) => setEmail(e.target.value)}/>
+            </div>
             <div className='login-field'>
                 <label>Username</label>
                 <input value={username} onChange={(e) => setUsername(e.target.value)}/>
