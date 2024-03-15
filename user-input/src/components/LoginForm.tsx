@@ -1,23 +1,36 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 export const LoginForm = () => {
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const navigate = useNavigate()
+
     const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    axios.defaults.withCredentials = true
+
+    useEffect(() => {
+        axios.get('http://localhost:4000/')
+        .then(res => {
+            if (res.data.valid === true){
+                navigate('/')
+            } else {
+                navigate('/login')
+            }
+        })
+    }, [])
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        if (username === '' || password === '' || email === '') {
-            console.log('Please enter all fields')
+        if (email === '' || password === '') {
+            alert('Please enter all fields')
             return
         } else {
-          const response = await axios.post('http://localhost:4000/account/register',
+            const response = await axios.post('http://localhost:4000/account/login',
          {
             email: email,
-            username: username,
             password: password
         }, {
             headers: {
@@ -25,10 +38,12 @@ export const LoginForm = () => {
             }
           })
           .then(response => {
-            console.log(response)
-            setUsername('')
+            if(response.data.Login === true){
+                navigate('/')
+            }
             setPassword('')
             setEmail('')
+            alert(response.data.message)
           })
           .catch(error => {
             console.log(error)
@@ -37,23 +52,21 @@ export const LoginForm = () => {
         }
     }
 
-  return (
-    <div>
-        <form className='login-form' onSubmit={(event) => handleSubmit(event)}>
-            <div className='login-field'>
-                <label>Email</label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)}/>
-            </div>
-            <div className='login-field'>
-                <label>Username</label>
-                <input value={username} onChange={(e) => setUsername(e.target.value)}/>
-            </div>
-            <div className='login-field'>
-                <label>Password</label>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-            </div>
-            <button type='submit'>Saada</button>
-        </form>
-    </div>
+    return (
+        <div>
+            <form className='register-form' onSubmit={(event) => handleSubmit(event)}>
+                <div className='register-field'>
+                    <label>Email</label>
+                    <input value={email} onChange={(e) => setEmail(e.target.value)}/>
+                </div>
+                <div className='register-field'>
+                    <label>Password</label>
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                </div>
+                <div className="submit-container">
+                    <button type='submit'>Log in</button>
+                </div>
+            </form>
+        </div>
   )
 }

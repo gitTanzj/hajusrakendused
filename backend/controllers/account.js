@@ -27,7 +27,7 @@ const register = async (req, res) => {
                 user_id: user.id
             };
             console.log(req.session)
-            res.status(201).send({
+            res.status(201).json({
                 message: 'New user is registered',
                 user: user,
                 user_session: req.session.user
@@ -47,10 +47,11 @@ const login = async (req, res) => {
                     username: User.username,
                     user_id: User.id
                 }
-                res.status(200).send({
+                res.status(200).json({
                     message: 'User is logged in',
                     user: User,
-                    user_session: req.session.user
+                    user_session: req.session.user,
+                    Login: true
                 })
             } else {
                 res.send({message: 'Password is incorrect'})
